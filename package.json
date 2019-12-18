@@ -1,0 +1,32 @@
+{
+  "name": "cinema",
+  "version": "1.0.0",
+  "description": "Backend for a Cinema reservation system",
+  "main": "app.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.17.1",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OsamaNabih/Cinema-Reservation-backend.git"
+  },
+  "author": "Osama Salem",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OsamaNabih/Cinema-Reservation-backend/issues"
+  },
+  "homepage": "https://github.com/OsamaNabih/Cinema-Reservation-backend#readme"
+}
