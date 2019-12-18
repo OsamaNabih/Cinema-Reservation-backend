@@ -1,5 +1,5 @@
 const express = require('express');
-//const keys = require('./config/keys');
+const keys = require('./config/keys');
 const passport = require('passport');
 const http = require('http');
 const cookieParser = require('cookie-parser')
@@ -18,8 +18,8 @@ app.use(cookieParser())
 
 // Routes
 app.use('/users', require('./routes/users'));
-app.use('/meetup', require('./routes/meetup'));
-app.use('/meetups', require('./routes/meetups'));
+app.use('/movie', require('./routes/movie'));
+//app.use('/meetups', require('./routes/meetups'));
 
 
 // app.get('/', (req, res) =>{
