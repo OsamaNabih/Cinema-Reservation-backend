@@ -17,19 +17,10 @@ app.use(bodyParser.json());
 app.use(cookieParser())
 
 // Routes
-app.use('/users', require('./routes/users'));
-app.use('/movie', require('./routes/movie'));
+app.use('/users', require('./controllers/user'));
+app.use('/movies', require('./controllers/movie'));
 //app.use('/meetups', require('./routes/meetups'));
 
-
-// app.get('/', (req, res) =>{
-//   result.then((result)=>{
-//     //res.render('MainPage', {result: result, userType: Boolean(req.user.userType), userId: req.user.userId});
-//     res.send(200);
-//   }).catch((error)=>{
-//     res.status(400).json(error);
-//   });
-// });
 app.listen(3000, ()=>
 {
   console.log("Listening on port 3000");

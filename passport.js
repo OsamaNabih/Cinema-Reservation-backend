@@ -3,7 +3,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local').Strategy;
 const { JWT_SECRET } = require('./config/keys');
-const UserModel = require('./models/user');
+const UserModel = require('./models/user.js');
 const Database = require('./config/DB');
 const bcrypt = require('bcryptjs');
 const config =require('./config/keys.js');
@@ -13,7 +13,10 @@ const DBconfig = require('./config/keys.js').DBconfig;
 var cookieExtractor = function(req) {
     var token = null;
     if (req && req.cookies) token = req.cookies['jwt'];
-    if (token === undefined) throw 'No cookies found';
+    if (token === undefined) {
+      console.log('no cookie');
+      throw 'No cookies found';
+    } 
     return token;
 };
 
@@ -37,11 +40,12 @@ passport.use('user-local', new JwtStrategy({
   try{
       // Find the user specifided in token
       const DB = new Database(DBconfig);
+      console.log('----------------------------------------################');
+      console.log(payload);
       const user = await DB.query(UserModel.GetUserIdAndTypeById(), payload.userId);
       await DB.close();
       if (user.length === 0){
-        user[0]['userType'] = 0;
-        return done(null, user[0]);
+        throw('No user exists with this ID');
       }
       done(null, user[0]);
   } catch(error) {
@@ -88,7 +92,7 @@ passport.use('admin-local', new JwtStrategy({
 
   // LOCAL STRATEGY
   passport.use('local', new LocalStrategy({
-    username: 'email',
+    usernameField: 'email',
     password: 'password'
   }, async (email, password, done) =>{
     try {
@@ -99,13 +103,10 @@ passport.use('admin-local', new JwtStrategy({
       if(user.length === 0){
         throw 'Invalid email or password';
       }
-
       const dbPassword = user[0].password;
       let isMatch = await bcrypt.compare(password,dbPassword);
       if (!isMatch){
-        user['error'] = 'Invalid email or password';
-        console.log(user);
-        done(null, user[0]);
+        throw 'Invalid email or password';
       }
        // Otherwise, return the user
       done(null, user);

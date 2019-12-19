@@ -14,15 +14,15 @@ const bcrypt = require('bcryptjs');
 const { JWT_SECRET } = require('../config/keys')
 signToken = (Id, type) => {
     return JWT.sign({
-    iss: 'Tafrah',
+    iss: 'Cinema',
     userId: Id,
     userType: type,
   }, 
-  JWT_SECRET,{expiresIn:60});
+  JWT_SECRET,{expiresIn:600});
 }
 
-router.route('signup')
-  .post(urlencodedParser, (req, res) => {
+router.route('/signup')
+  .post(urlencodedParser, async (req, res) => {
     // Generate a salt
     try {
       const salt = await bcrypt.genSalt(10);
@@ -33,12 +33,14 @@ router.route('signup')
       const DB = new Database(DBconfig);
       let result = await DB.query(UserModel.InsertUser(), req.body);
       await DB.close();
-      let id = result[0];
+      let id = result.insertId;
       let type = req.body.userType;
       let token = signToken(id, type);
       res.cookie('jwt', token); // add cookie here
-      res.status(200);
+      res.status(200).end();
     } catch(error){
+      console.log('An error occurred');
+      console.log(error);
       res.status(400).json(error);
     }
   }
@@ -46,5 +48,20 @@ router.route('signup')
 
 router.route('/signin')
   .post(urlencodedParser, passportSignIn, (req, res) => {
-    const token = signToken(req.user.userId, req.user.userType);
+    if (req.user.error){
+      if (req.user.error.sqlMessage){
+        res.status(200).json({error: req.user.error.sqlMessage}).end();
+      }
+      else{
+        res.status(200).json({error: req.user.error}).end();
+      }
+    }
+    else{
+      const token = signToken(req.user[0].userId, req.user[0].userType);
+      res.cookie('jwt', token); // add cookie here;
+      res.sendStatus(200);
+    }
   })
+
+
+module.exports = router;
