@@ -19,5 +19,14 @@ module.exports = {
   },
   GetScreenCapacity: function(){
     return `SELECT screenRows, screenColumns FROM Screens WHERE screenNumber = ?`;
+  },
+  InsertSeat: function(){
+    return `INSERT INTO  Seats VALUES ?`;
+  },
+  InsertMovie: function(){
+    return `INSERT INTO Movies set ?`;
+  },
+  InsertScreening: function(){
+    return `INSERT INTO Screenings set ?`;
   }
 }

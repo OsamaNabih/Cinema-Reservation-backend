@@ -10,14 +10,32 @@ const MovieModel = require('../models/movie');
 const DBconfig = require('../config/keys').DBconfig;
 const Database = require('../config/DB');
 
-router.route('/create')
+router.route('/add')
   .post(passportUser, urlencodedParser, async (req, res) => {
-    //Do processing to get movie info
-    let info = req.MovieInformation
-    let showTimes = info.showTimes.split()
-    const DB = new Database(DBconfig);
-    let movieResult = await DB.query(MovieModel.CreateMovie(), req.MovieInformation);
-    //Enter the movie screenings
+    try {
+      let startDate = new Date(req.body.startDate);
+      let endDate = new Date(req.body.endDate);
+      let currentDate = startDate;
+      const DB = new Database(DBconfig);
+      let movieResult = await DB.query(MovieModel.InsertMovie(), req.body.movie);
+      let screeningTimes = req.body.screeningTimes;
+      //Enter the movie screenings
+      while (currentDate <= endDate) {
+        let screening = {movieId: movieResult.insertId, screenNumber: req.body.movie.screenNumber, 
+          screeningDate: currentDate, screeningTime: 0};
+        screeningTimes.forEach(async (screeningTime) => {
+          screening['screeningTime'] = screeningTime;
+          let screeningResult = await DB.query(MovieModel.InsertScreening(), screening);
+        });
+        let nextDate = currentDate.setDate(currentDate.getDate() + 1);
+        currentDate = new Date(nextDate);
+      }
+      res.status(200).end();
+    } catch(error) {
+      console.log('An error occurred');
+      console.log(error);
+      res.status(400).json({msg: 'An error occurred'}).end();
+    }
   });
 
 router.route('/:movieId')
@@ -30,9 +48,6 @@ router.route('/:movieId')
   
 router.route('/:movieId/:screenId/:screeningId/seats')
   .get(passportUser, async (req, res) => {
-    let n = 5;
-    let k = 10;
-    console.log("" + n + k);
     const DB = new Database(DBconfig);
     let screeningSeats = await DB.query(MovieModel.GetReservedSeats(), [req.params.movieId, req.params.screeningId]);
     let screen = await DB.query(MovieModel.GetScreenCapacity(), req.params.screenId);
@@ -40,7 +55,28 @@ router.route('/:movieId/:screenId/:screeningId/seats')
     let [rows, cols] = [screen[0].screenRows, screen[0].screenColumns];
     res.status(200).json({screenId: screenId, rows: rows, cols: cols, seats: screeningSeats}).end();
   })
-  .post();
+  .post(passportUser, urlencodedParser, async (req, res) => {
+    try {
+      let userId = req.body.userId;
+      let seats = req.body.seats;
+      let idChain = "" + req.params.movieId + req.params.screenId + req.params.screeningId;
+      seatsArray = [];
+      seats.forEach((seat) => { 
+        seat['ticketNumber'] = Number("" + userId + idChain + seat.rowNum + seat.colNum);
+        seat['reserved'] = 1;
+        seat['userId'] = userId;
+        seat['screeningId'] = Number(req.params.screeningId);
+      });
+      const DB = new Database(DBconfig);
+      let result = DB.query(MovieModel.InsertSeat(), 
+                          [seats.map(seat => [seat.screeningId, seat.rowNum, seat.colNum, 
+                            seat.reserved, seat.ticketNumber, seat.userId])]);
+      res.status(200).end();
+    } catch(error) {
+      console.log(error);
+      res.status(400).json({msg: 'An error has occurred'}).end();
+    }
+  });
 
 router.route('/')
   .get(passportUser, async(req, res) => {

@@ -1,0 +1,205 @@
+{
+	"info": {
+		"_postman_id": "ec758cf8-95f3-41a5-8a24-44470bca9876",
+		"name": "Cinema reservation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"OsosElGamed\",\n\t\"email\": \"osos@gmail.com\",\n\t\"password\": \"123\",\n\t\"firstName\": \"osama\",\n\t\"lastName\": \"nabih\",\n\t\"userType\": 2,\n\t\"birthDate\": \"1997-05-30\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"osos@gmail.com\",\n    \"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get movie",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all movies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/movies/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View seats for a movie screening",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/movies/1/1/1/seats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies",
+						"1",
+						"1",
+						"1",
+						"seats"
+					],
+					"query": [
+						{
+							"key": "Authentication",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reserve seats",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": 1,\n\t\"seats\": [\n\t\t{\n\t\t\t\"rowNum\": 10,\n\t\t\t\"colNum\": 10\n\t\t},\n\t\t{\n\t\t\t\"rowNum\": 5,\n\t\t\t\"colNum\": 5\n\t\t},\n\t\t{\n\t\t\t\"rowNum\": 1,\n\t\t\t\"colNum\": 2\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/movies/1/1/1/seats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies",
+						"1",
+						"1",
+						"1",
+						"seats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add movie",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"movie\": {\n\t\t\"genre\": \"Drama\",\n\t\t\"name\": \"The Godfather\",\n\t\t\"screenNumber\": 3,\n\t\t\"runtime\": 178\n\t},\n\t\"screeningTimes\": [\"9:30\", \"11:00\"],\n\t\"startDate\": \"2020-03-29\",\n\t\"endDate\": \"2020-04-01\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/movies/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
