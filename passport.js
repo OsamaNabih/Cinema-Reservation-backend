@@ -40,8 +40,6 @@ passport.use('user-local', new JwtStrategy({
   try{
       // Find the user specifided in token
       const DB = new Database(DBconfig);
-      console.log('----------------------------------------################');
-      console.log(payload);
       const user = await DB.query(UserModel.GetUserIdAndTypeById(), payload.userId);
       await DB.close();
       if (user.length === 0){

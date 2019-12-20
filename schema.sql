@@ -16,8 +16,8 @@ create table Users
 create table Screens
 (
   screenNumber int unsigned not null UNIQUE,
-  rows int unsigned not null,
-  columns int unsigned not null,
+  screenRows int unsigned not null,
+  screenColumns int unsigned not null,
   Primary key(screenNumber)
 );
 
@@ -50,9 +50,11 @@ create table Seats
   rowNum int unsigned not null,
   colNum int unsigned not null,
   reserved boolean default 1,
-  ticketNumber varchar(200),
+  ticketNumber bigint unsigned,
+  userId int unsigned not null,
   Primary key(screeningId, rowNum, colNum),
-  Foreign key(screeningId) references Screenings(screeningId)
+  Foreign key(screeningId) references Screenings(screeningId),
+  Foreign key(userId) references Users(userId)
 );
 
 /*--------------------------Insertions---------------------------------*/
@@ -101,9 +103,9 @@ Insert Into Screenings(screeningId, screenNumber, screeningDate, screeningTime, 
 values(5, 2, STR_TO_DATE('09-04-2020 00:00:00','%m-%d-%Y %H:%i:%s'), '09:30:00', 2);
 
 
-Insert into Seats(screeningId, rowNum, colNum, ticketNumber)
-values(1, 10, 15, 'ticketNum1');
+Insert into Seats(screeningId, rowNum, colNum, ticketNumber, userId)
+values(1, 10, 15, 1000, 1);
 
 
-Insert into Seats(screeningId, rowNum, colNum, ticketNumber)
-values(1, 10, 16, 'ticketNum2');
+Insert into Seats(screeningId, rowNum, colNum, ticketNumber, userId)
+values(1, 10, 16, 1001, 1);

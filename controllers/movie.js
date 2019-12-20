@@ -20,19 +20,25 @@ router.route('/create')
     //Enter the movie screenings
   });
 
-router.route('/:id')
+router.route('/:movieId')
   .get(passportUser, async (req, res) => {
     const DB = new Database(DBconfig);
-    let movieResult = await DB.query(MovieModel.GetMovieInfo(), req.params.id);
-    res.status(200).json(movieResult);
+    let movieResult = await DB.query(MovieModel.GetMovieInfo(), req.params.movieId);
+    let screenings = await DB.query(MovieModel.GetScreeningTimes(), req.params.movieId);
+    res.status(200).json({movie: movieResult[0], screenings: screenings});
   });
   
-router.route('/:movieId/:screenid/:screeningId/seats')
+router.route('/:movieId/:screenId/:screeningId/seats')
   .get(passportUser, async (req, res) => {
+    let n = 5;
+    let k = 10;
+    console.log("" + n + k);
     const DB = new Database(DBconfig);
     let screeningSeats = await DB.query(MovieModel.GetReservedSeats(), [req.params.movieId, req.params.screeningId]);
-    let [rows, cols] = await DB.query(MovieModel.GetScreenCapacity(), req.params.screenId)[0];
-    res.status(200).json({rows: rows, cols: cols, seats: screeningSeats}).end();
+    let screen = await DB.query(MovieModel.GetScreenCapacity(), req.params.screenId);
+    let screenId = screen[0].screenId;
+    let [rows, cols] = [screen[0].screenRows, screen[0].screenColumns];
+    res.status(200).json({screenId: screenId, rows: rows, cols: cols, seats: screeningSeats}).end();
   })
   .post();
 

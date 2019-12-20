@@ -3,13 +3,13 @@ module.exports = {
     return `SELECT movieId, name, genre, runtime FROM Movies`;
   },
   GetMovieInfo: function(){
-    return `SELECT *  FROM Movies NATURAL JOIN Screens NATURAL JOIN Screenings`;
+    return `SELECT * FROM Movies WHERE movieId = ?`;
   },
   GetScreeningTimes: function(){
-    return `SELECT DISTINCT screeningTime FROM Movies NATURAL JOIN Screenings`;
+    return `SELECT DISTINCT screeningId, DATE_FORMAT(screeningDate,'%y%y-%m-%d') as screeningDate, screeningTime FROM Screenings WHERE movieId = ?`;
   },
   GetReservedSeats: function(){
-    return `SELECT * FROM Seats WHERE movieId = ? screeningId = ? and reserved = 1`;
+    return `SELECT rowNum, colNum, reserved FROM Seats WHERE screeningId = ? and reserved = 1`;
   },
   GetScreening: function(){
     return `SELECT * FROM Screenings WHERE screeningId = ?`;
@@ -18,6 +18,6 @@ module.exports = {
     return `SELECT * FROM Movies NATURAL JOIN Screens NATURAL JOIN Seats`;
   },
   GetScreenCapacity: function(){
-    return `SELECT rows, columns FROM Screens where screenNumber = ?`;
+    return `SELECT screenRows, screenColumns FROM Screens WHERE screenNumber = ?`;
   }
 }
