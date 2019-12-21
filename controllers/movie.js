@@ -11,7 +11,7 @@ const DBconfig = require('../config/keys').DBconfig;
 const Database = require('../config/DB');
 
 router.route('/add')
-  .post(passportUser, urlencodedParser, async (req, res) => {
+  .post(passportAdmin, urlencodedParser, async (req, res) => {
     try {
       let startDate = new Date(req.body.startDate);
       let endDate = new Date(req.body.endDate);
@@ -49,7 +49,7 @@ router.route('/:movieId')
 router.route('/:movieId/:screenId/:screeningId/seats')
   .get(passportUser, async (req, res) => {
     const DB = new Database(DBconfig);
-    let screeningSeats = await DB.query(MovieModel.GetReservedSeats(), [req.params.movieId, req.params.screeningId]);
+    let screeningSeats = await DB.query(MovieModel.GetReservedSeats(), req.params.screeningId);
     let screen = await DB.query(MovieModel.GetScreenCapacity(), req.params.screenId);
     let screenId = screen[0].screenId;
     let [rows, cols] = [screen[0].screenRows, screen[0].screenColumns];

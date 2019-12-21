@@ -15,22 +15,13 @@ var cookieExtractor = function(req) {
     if (req && req.cookies) token = req.cookies['jwt'];
     if (token === undefined) {
       console.log('no cookie');
-      throw 'No cookies found';
+      throw 'Unauthorized';
     } 
     return token;
 };
 
 module.exports.passportUser = (req, res, next)=>{
-  if (req.cookies.jwt){
-    passport.authenticate('user-local', { session: false })(req, res, next);
-  }
-  else{
-    let user = {};
-    user['userType'] = 0;
-    user['userId'] = 0;
-    req.user = user;
-    next();
-  }
+  passport.authenticate('user-local', { session: false })(req, res, next);
 }
 
 passport.use('user-local', new JwtStrategy({
