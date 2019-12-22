@@ -9,7 +9,7 @@ module.exports = {
     return `SELECT DISTINCT screeningId, DATE_FORMAT(screeningDate,'%y%y-%m-%d') as screeningDate, screeningTime FROM Screenings WHERE movieId = ?`;
   },
   GetReservedSeats: function(){
-    return `SELECT rowNum, colNum, reserved FROM Seats WHERE screeningId = ? and reserved = 1`;
+    return `SELECT rowNum, colNum, reserved, ticketNumber FROM Seats WHERE screeningId = ? and reserved = 1`;
   },
   GetScreening: function(){
     return `SELECT * FROM Screenings WHERE screeningId = ?`;
