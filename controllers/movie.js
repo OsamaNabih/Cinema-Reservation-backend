@@ -73,7 +73,11 @@ router.route('/:movieId/:screenId/:screeningId/seats')
       let result = DB.query(MovieModel.InsertSeat(), 
                           [seats.map(seat => [seat.screeningId, seat.rowNum, seat.colNum, 
                             seat.reserved, seat.ticketNumber, seat.userId])]);
-      res.status(200).end();
+      var seatArray =[]
+      seats.forEach((seat) => {
+        seatArray.push(seat.ticketNumber);
+      })
+      res.send({seats:seatArray});
     } catch(error) {
       console.log(error);
       res.status(400).json({msg: 'An error has occurred'}).end();
