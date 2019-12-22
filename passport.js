@@ -12,15 +12,17 @@ const DBconfig = require('./config/keys.js').DBconfig;
 // JSON WEB TOKENS STRATEGY
 var cookieExtractor = function(req) {
     var token = null;
-    if (req && req.cookies) token = req.cookies['jwt'];
+    if (req) token = req.get("Authorization");
     if (token === undefined) {
       console.log('no cookie');
       throw 'Unauthorized';
     } 
+    console.log(token)
     return token;
 };
 
 module.exports.passportUser = (req, res, next)=>{
+  if(req.get("Authorization"))
   passport.authenticate('user-local', { session: false })(req, res, next);
 }
 
@@ -46,13 +48,9 @@ passport.use('user-local', new JwtStrategy({
 }));
 
 module.exports.passportAdmin = (req, res, next)=>{
-  if (req.cookies.jwt){
+  console.log(req.get("Authorization"))
+  if(req.get("Authorization"))
     passport.authenticate('admin-local', { session: false })(req, res, next);
-  }
-  else{
-    console.log('Access not allowed for non-admins');
-    res.sendStatus(401);
-  }
 }
 
 passport.use('admin-local', new JwtStrategy({
@@ -62,13 +60,15 @@ passport.use('admin-local', new JwtStrategy({
 }, async (payload, done) =>{
   try{
       // Find the user specifided in token
+      console.log("SDSD")
       const DB = new Database(DBconfig);
       const user = await DB.query(UserModel.GetUserIdAndTypeById(), payload.userId);
+      console.log(user[0])
       await DB.close();
       if (user.length === 0){
         return done(null, false);
       }
-      else if (user[0].userType !== 1){
+      else if (user[0].userType !== 2){
         return done(null, false);
       }
       done(null, user[0]);

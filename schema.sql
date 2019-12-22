@@ -58,11 +58,11 @@ create table Seats
 );
 
 /*--------------------------Insertions---------------------------------*/
-Insert into Users(email,userName,firstName,lastName,password,userType,birthDate)
-values ("walidashraf423@gmail.com","WalidAshraf","waleed","ashraf","pass1",1,STR_TO_DATE('09-04-2020 00:00:00','%m-%d-%Y %H:%i:%s'));
+Insert into Users(email,userName,firstName,lastName,userType,birthDate)
+values ("walidashraf423@gmail.com","WalidAshraf","waleed","ashraf",1,STR_TO_DATE('09-04-2020 00:00:00','%m-%d-%Y %H:%i:%s'));
 
-Insert into Users(email,username,firstName,lastName,password,userType,birthDate)
-values ("OmarWagih@gmail.com","OmarWagih","Omar","Wagih","pass2",2,STR_TO_DATE('09-04-2020 00:00:00','%m-%d-%Y %H:%i:%s'));
+Insert into Users(email,username,firstName,lastName,userType,birthDate)
+values ("OmarWagih@gmail.com","OmarWagih","Omar","Wagih",2,STR_TO_DATE('09-04-2020 00:00:00','%m-%d-%Y %H:%i:%s'));
 
 /*
 -- Insert int unsignedo Users(email,firstName,lastName,userType,birthDate)

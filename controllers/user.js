@@ -25,11 +25,12 @@ router.route('/signup')
   .post(urlencodedParser, async (req, res) => {
     // Generate a salt
     try {
+      console.log(req.body)
       const salt = await bcrypt.genSalt(10);
       // Generate a password hash (salt + hash)
       const passwordHash = await bcrypt.hash(req.body.password, salt);
       req.body.password = passwordHash;
-      req.body.userType = 3;
+      req.body.userType = 1;
       const DB = new Database(DBconfig);
       let result = await DB.query(UserModel.InsertUser(), req.body);
       await DB.close();
@@ -37,6 +38,7 @@ router.route('/signup')
       let type = req.body.userType;
       let token = signToken(id, type);
       res.cookie('jwt', token); // add cookie here
+      res.send({ cookie : token });
       res.status(200).end();
     } catch(error){
       console.log('An error occurred');
@@ -59,7 +61,7 @@ router.route('/signin')
     else{
       const token = signToken(req.user[0].userId, req.user[0].userType);
       res.cookie('jwt', token); // add cookie here;
-      res.sendStatus(200);
+      res.send({ cookie : token });
     }
   })
 
